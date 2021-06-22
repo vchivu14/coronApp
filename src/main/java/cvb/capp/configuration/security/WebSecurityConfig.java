@@ -26,31 +26,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication().passwordEncoder(new BCryptPasswordEncoder())
                 .dataSource(dataSource)
-                .usersByUsernameQuery("SELECT username, password, enabled FROM users WHERE username = ?")
-                .authoritiesByUsernameQuery("select username, role from users where username = ?");
+                .usersByUsernameQuery("SELECT Username, Password, Enabled FROM Users WHERE Username = ?")
+                .authoritiesByUsernameQuery("select Username, Role from Users where Username = ?");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/", "/bootstrap/**", "/css/**", "/fonts/**", "/img/**").permitAll()
-                    .antMatchers("/login/**", "/registration/**").permitAll()
-                    .antMatchers("/forgot_password/**", "/reset_password/**").permitAll()
-                    .antMatchers("/secretary/*").hasRole("SECRETARY")
-                    .antMatchers("/admin/*").hasRole("ADMIN")
-                    .antMatchers("/user/*").hasRole("USER")
-                    .anyRequest().authenticated()
-                    .and()
+                .antMatchers("/", "/bootstrap/**", "/css/**", "/fonts/**", "/img/**").permitAll()
+                .antMatchers("/login/**", "/registration/**").permitAll()
+                .antMatchers("/forgot_password/**", "/reset_password/**").permitAll()
+                .antMatchers("/secretary/*").hasRole("SECRETARY")
+                .antMatchers("/admin/*").hasRole("ADMIN")
+                .antMatchers("/user/*").hasRole("USER")
+                .anyRequest().authenticated()
+                .and()
                 .formLogin()
-                    .loginPage("/login")
-                    .successHandler(authenticationSuccessHandler)
-                    .and()
+                .loginPage("/login")
+                .successHandler(authenticationSuccessHandler)
+                .and()
                 .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .invalidateHttpSession(true)
-                    .logoutSuccessHandler(new CustomLogoutSuccessHandler())
-                    .logoutSuccessUrl("/login");
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .invalidateHttpSession(true)
+                .logoutSuccessHandler(new CustomLogoutSuccessHandler())
+                .logoutSuccessUrl("/login");
 
     }
 }

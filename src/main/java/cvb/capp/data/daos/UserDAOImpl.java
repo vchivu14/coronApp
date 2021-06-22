@@ -29,7 +29,7 @@ public class UserDAOImpl implements UserDAO {
         String role = user.getRole();
         short enabled = user.getEnabled();
         Timestamp createdAt = Timestamp.valueOf(LocalDateTime.now());
-        String sql = "INSERT INTO users (Username, Email, Phone, Password, Role, Enabled, CreatedAt) " +
+        String sql = "INSERT INTO Users (Username, Email, Phone, Password, Role, Enabled, CreatedAt) " +
                 "VALUES (?,?,?,?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -48,35 +48,35 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User findUserByUsername(String username) {
-        String sql = "SELECT * FROM users WHERE Username = ?";
+        String sql = "SELECT * FROM Users WHERE Username = ?";
         RowMapper<User> rowMapper = new BeanPropertyRowMapper<>(User.class);
         return jdbcTemplate.queryForObject(sql, rowMapper, username);
     }
 
     @Override
     public User findUserByUserId(int userId) {
-        String sql = "SELECT * FROM users WHERE id = ?";
+        String sql = "SELECT * FROM Users WHERE id = ?";
         RowMapper<User> rowMapper = new BeanPropertyRowMapper<>(User.class);
         return jdbcTemplate.queryForObject(sql, rowMapper, userId);
     }
 
     @Override
     public User findByEmail(String email) {
-        String sql = "SELECT * FROM users WHERE Email = ?";
+        String sql = "SELECT * FROM Users WHERE Email = ?";
         RowMapper<User> rowMapper = new BeanPropertyRowMapper<>(User.class);
         return jdbcTemplate.queryForObject(sql, rowMapper, email);
     }
 
     @Override
     public User findByResetPasswordToken(String token) {
-        String sql = "SELECT * FROM users WHERE Reset_Password_Token = ?";
+        String sql = "SELECT * FROM Users WHERE Reset_Password_Token = ?";
         RowMapper<User> rowMapper = new BeanPropertyRowMapper<>(User.class);
         return jdbcTemplate.queryForObject(sql, rowMapper, token);
     }
 
     @Override
     public boolean removeUser(int userId) {
-        String sql = "DELETE FROM users WHERE id = ?";
+        String sql = "DELETE FROM Users WHERE id = ?";
         return jdbcTemplate.update(sql, userId) >= 0;
     }
 
@@ -85,44 +85,44 @@ public class UserDAOImpl implements UserDAO {
         String username = user.getUsername();
         String email = user.getEmail();
         String phone = user.getPhone();
-        String sql = "UPDATE users SET Username = ?, Email = ?, Phone = ? WHERE id = ?";
+        String sql = "UPDATE Users SET Username = ?, Email = ?, Phone = ? WHERE id = ?";
         return jdbcTemplate.update(sql, username, email, phone, userId) >= 0;
     }
 
     @Override
     public List<User> fetchAllUsers() {
-        String sql = "SELECT * FROM users";
+        String sql = "SELECT * FROM Users";
         RowMapper<User> rowMapper = new BeanPropertyRowMapper<>(User.class);
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
     public boolean disableUser(int userId) {
-        String sql = "UPDATE users SET Enabled = ? WHERE id = ?";
+        String sql = "UPDATE Users SET Enabled = ? WHERE id = ?";
         return jdbcTemplate.update(sql, 0, userId) >= 0;
     }
 
     @Override
     public boolean enableUser(int userId) {
-        String sql = "UPDATE users SET Enabled = ? WHERE id = ?";
+        String sql = "UPDATE Users SET Enabled = ? WHERE id = ?";
         return jdbcTemplate.update(sql,1, userId) >= 0;
     }
 
     @Override
     public void savePasswordToken(int userId, String token) {
-        String sql = "UPDATE users SET Reset_Password_Token = ? WHERE id = ?";
+        String sql = "UPDATE Users SET Reset_Password_Token = ? WHERE id = ?";
         jdbcTemplate.update(sql, token, userId);
     }
 
     @Override
     public void savePassword(int userId, String newPassword) {
-        String sql = "UPDATE users SET Password = ? WHERE id = ?";
+        String sql = "UPDATE Users SET Password = ? WHERE id = ?";
         jdbcTemplate.update(sql, newPassword, userId);
     }
 
     @Override
     public void setTokenNull(int userId) {
-        String sql = "UPDATE users SET Reset_Password_Token = ? WHERE id = ?";
+        String sql = "UPDATE Users SET Reset_Password_Token = ? WHERE id = ?";
         jdbcTemplate.update(sql, null, userId);
     }
 }

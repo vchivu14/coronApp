@@ -23,7 +23,7 @@ public class PersonDAOImpl implements PersonDAO {
         String lastName = person.getLastName();
         Date DOB = person.getDob();
         long CPR = person.getCPR();
-        String sql = "INSERT INTO persons (FirstName, MiddleName, LastName, DOB, CPR, Addresses_id, Users_id) " +
+        String sql = "INSERT INTO Persons (FirstName, MiddleName, LastName, DOB, CPR, Addresses_id, Users_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
@@ -40,21 +40,21 @@ public class PersonDAOImpl implements PersonDAO {
 
     @Override
     public Person findPersonByPersonId(int personId) {
-        String sql = "SELECT * FROM persons WHERE id = ?";
+        String sql = "SELECT * FROM Persons WHERE id = ?";
         RowMapper<Person> rowMapper = new BeanPropertyRowMapper<>(Person.class);
         return jdbcTemplate.queryForObject(sql, rowMapper, personId);
     }
 
     @Override
     public Person findPersonByUserId(int userId) {
-        String sql = "SELECT * FROM persons WHERE Users_id = ?";
+        String sql = "SELECT * FROM Persons WHERE Users_id = ?";
         RowMapper<Person> rowMapper = new BeanPropertyRowMapper<>(Person.class);
         return jdbcTemplate.queryForObject(sql, rowMapper, userId);
     }
 
     @Override
     public boolean removePerson(int personId) {
-        String sql = "DELETE FROM persons WHERE id = ?";
+        String sql = "DELETE FROM Persons WHERE id = ?";
         return jdbcTemplate.update(sql, personId) >= 0;
     }
 
@@ -65,14 +65,14 @@ public class PersonDAOImpl implements PersonDAO {
         String lastName = person.getLastName();
         Date DOB = person.getDob();
         long CPR = person.getCPR();
-        String sql = "UPDATE persons SET Firstname = ?, MiddleName = ?, LastName = ?, " +
+        String sql = "UPDATE Persons SET Firstname = ?, MiddleName = ?, LastName = ?, " +
                 "DOB = ?, CPR = ? WHERE id = ?";
         return jdbcTemplate.update(sql, firstName, middleName, lastName, DOB, CPR, personId) >= 0;
     }
 
     @Override
     public List<Person> fetchAllPersons() {
-        String sql = "SELECT * FROM persons";
+        String sql = "SELECT * FROM Persons";
         RowMapper<Person> rowMapper = new BeanPropertyRowMapper<>(Person.class);
         return jdbcTemplate.query(sql, rowMapper);
     }

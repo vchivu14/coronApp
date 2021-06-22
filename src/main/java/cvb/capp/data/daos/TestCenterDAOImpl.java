@@ -29,7 +29,7 @@ public class TestCenterDAOImpl implements TestCenterDAO {
         int slots = testCenter.getSlots();
         int capacity = testCenter.getCapacity();
         Time openingTime = testCenter.getOpeningTime();
-        String sql = "INSERT INTO testcenters (Name, OperatingMinutes, SlotSizeMinutes, PersonsPerSlot, Slots, Capacity, " +
+        String sql = "INSERT INTO TestCenters (Name, OperatingMinutes, SlotSizeMinutes, PersonsPerSlot, Slots, Capacity, " +
                 "Addresses_id, OpeningTime)"
                 + "VALUES(?,?,?,?,?,?,?,?)";
         jdbcTemplate.update(connection -> {
@@ -48,7 +48,7 @@ public class TestCenterDAOImpl implements TestCenterDAO {
 
     @Override
     public boolean removeTestCenter(int testCenterId) {
-        String sql = "DELETE FROM testcenters WHERE id = ?";
+        String sql = "DELETE FROM TestCenters WHERE id = ?";
         return jdbcTemplate.update(sql, testCenterId) >= 0;
     }
 
@@ -61,7 +61,7 @@ public class TestCenterDAOImpl implements TestCenterDAO {
         int slots = testCenter.getSlots();
         int capacity = testCenter.getCapacity();
         Time openingTime = testCenter.getOpeningTime();
-        String sql = "UPDATE testcenters SET Name = ?, OperatingMinutes = ?, SlotSizeMinutes = ?, " +
+        String sql = "UPDATE TestCenters SET Name = ?, OperatingMinutes = ?, SlotSizeMinutes = ?, " +
                 "PersonsPerSlot = ?, Slots = ?, Capacity = ?, OpeningTime = ? WHERE id = ?";
         return jdbcTemplate.update(sql, name, operatingMinutes, slotSizeMinutes,
                 personsPerSlot, slots, capacity, openingTime, testCenterId) >= 0;
@@ -69,21 +69,21 @@ public class TestCenterDAOImpl implements TestCenterDAO {
 
     @Override
     public List<TestCenter> fetchAllTestCenters() {
-        String sql = "SELECT * FROM testcenters";
+        String sql = "SELECT * FROM TestCenters";
         RowMapper<TestCenter> rowMapper = new BeanPropertyRowMapper<>(TestCenter.class);
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
     public TestCenter findTestCenterById(int testCenterId) {
-        String sql = "SELECT * FROM testcenters WHERE id = ?";
+        String sql = "SELECT * FROM TestCenters WHERE id = ?";
         RowMapper<TestCenter> rowMapper = new BeanPropertyRowMapper<>(TestCenter.class);
         return jdbcTemplate.queryForObject(sql, rowMapper, testCenterId);
     }
 
     @Override
     public TestCenter findTestCenterByName(String name) {
-        String sql = "SELECT * FROM testcenters WHERE Name = ?";
+        String sql = "SELECT * FROM TestCenters WHERE Name = ?";
         RowMapper<TestCenter> rowMapper = new BeanPropertyRowMapper<>(TestCenter.class);
         return jdbcTemplate.queryForObject(sql, rowMapper, name);
     }

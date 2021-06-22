@@ -24,7 +24,7 @@ public class AddressDAOImpl implements AddressDAO {
         int apartment = address.getApartment();
         String locality = address.getLocality();
         int zipcode = address.getZipcode();
-        String sql = "INSERT INTO addresses (StreetName, StreetNo, Apartment, Locality, Zipcode)" +
+        String sql = "INSERT INTO Addresses (StreetName, StreetNo, Apartment, Locality, Zipcode)" +
                 "VALUES (?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -46,14 +46,14 @@ public class AddressDAOImpl implements AddressDAO {
         int apartment = address.getApartment();
         String locality = address.getLocality();
         int zipcode = address.getZipcode();
-        String sql = "UPDATE addresses SET StreetName = ?, StreetNo = ?, Apartment = ?, " +
+        String sql = "UPDATE Addresses SET StreetName = ?, StreetNo = ?, Apartment = ?, " +
                 "Locality = ?, Zipcode = ? WHERE id = ?";
         return jdbcTemplate.update(sql, streetName, streetNo, apartment, locality, zipcode, address_id) >= 0;
     }
 
     @Override
     public Address findAddressById(int addressId) {
-        String sql = "SELECT * FROM addresses WHERE id = ?";
+        String sql = "SELECT * FROM Addresses WHERE id = ?";
         RowMapper<Address> rowMapper = new BeanPropertyRowMapper<>(Address.class);
         return jdbcTemplate.queryForObject(sql, rowMapper, addressId);
     }

@@ -19,14 +19,14 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 
     @Override
     public List<Appointment> fetchAllAppointmentsByDatePerTestCenter(Date date, int testCenterId) {
-        String sql = "SELECT * FROM appointments WHERE Date = ? AND TestCenters_id = ?";
+        String sql = "SELECT * FROM Appointments WHERE Date = ? AND TestCenters_id = ?";
         RowMapper<Appointment> rowMapper = new BeanPropertyRowMapper<>(Appointment.class);
         return jdbcTemplate.query(sql, rowMapper, date, testCenterId);
     }
 
     @Override
     public List<Appointment> fetchAllAppointmentsByDateAndHourPerTestCenter(Date date, int testCenterId, Time time) {
-        String sql = "SELECT * FROM appointments WHERE Date = ? AND TestCenters_id = ? AND Time = ?";
+        String sql = "SELECT * FROM Appointments WHERE Date = ? AND TestCenters_id = ? AND Time = ?";
         RowMapper<Appointment> rowMapper = new BeanPropertyRowMapper<>(Appointment.class);
         return jdbcTemplate.query(sql, rowMapper, date, testCenterId, time);
     }
@@ -37,7 +37,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         Time time = appointment.getTime();
         int testCenterId = appointment.getTestCenters_id();
         String testType = appointment.getTestType();
-        String sql = "INSERT INTO appointments(Date, Time, TestCenters_id, TestType, Persons_id) " +
+        String sql = "INSERT INTO Appointments(Date, Time, TestCenters_id, TestType, Persons_id) " +
                 "VALUES (?, ?, ?, ?, ?)";
         return jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
@@ -52,14 +52,14 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 
     @Override
     public boolean deleteAppointment(int appointmentId) {
-        String sql = "DELETE FROM appointments WHERE Id = ?";
+        String sql = "DELETE FROM Appointments WHERE Id = ?";
         return jdbcTemplate.update(sql, appointmentId) >= 0;
 
     }
 
     @Override
     public boolean checkForDoubleAppointments(Date date, int personId) {
-        String sql = "SELECT * FROM appointments WHERE Date = ? AND Persons_id = ?";
+        String sql = "SELECT * FROM Appointments WHERE Date = ? AND Persons_id = ?";
         RowMapper<Appointment> rowMapper = new BeanPropertyRowMapper<>(Appointment.class);
         List<Appointment> appointments = jdbcTemplate.query(sql,rowMapper,date,personId);
         return appointments.size() > 0;
@@ -67,28 +67,28 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 
     @Override
     public List<Appointment> fetchAppointmentsForPerson(int personId) {
-        String sql = "SELECT * FROM appointments WHERE Persons_id = ?";
+        String sql = "SELECT * FROM Appointments WHERE Persons_id = ?";
         RowMapper<Appointment> rowMapper = new BeanPropertyRowMapper<>(Appointment.class);
         return jdbcTemplate.query(sql, rowMapper, personId);
     }
 
     @Override
     public List<Appointment> fetchAllAppointments() {
-        String sql = "SELECT * FROM appointments";
+        String sql = "SELECT * FROM Appointments";
         RowMapper<Appointment> rowMapper = new BeanPropertyRowMapper<>(Appointment.class);
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
     public List<Appointment> fetchAllPresentAppointments(Date date) {
-        String sql = "SELECT * FROM appointments WHERE Date = ?";
+        String sql = "SELECT * FROM Appointments WHERE Date = ?";
         RowMapper<Appointment> rowMapper = new BeanPropertyRowMapper<>(Appointment.class);
         return jdbcTemplate.query(sql, rowMapper, date);
     }
 
     @Override
     public boolean removeAppointmentForPerson(int personId, int appointmentId) {
-        String sql = "DELETE FROM appointments WHERE Id = ? AND Persons_id = ?";
+        String sql = "DELETE FROM Appointments WHERE Id = ? AND Persons_id = ?";
         return jdbcTemplate.update(sql, appointmentId, personId) >= 0;
     }
 }
