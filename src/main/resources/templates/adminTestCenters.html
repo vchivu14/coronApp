@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" th:href="@{/}">C-app</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item">
+                <a class="nav-link" th:href="@{/admin/{username}(username=${#httpServletRequest.userPrincipal.name})}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/testCenters}">Test Centers</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/users}">Users</a>
+            </li>
+        </ul>
+        <div class="navbar-nav">
+            <span class="icon-bar">
+                <li sec:authorize="!isAuthenticated()" class="nav-item">
+                    <a class="btn btn-outline-primary" th:href="@{/login}">Login</a>
+                </li>
+            </span>
+            <span class="icon-bar">
+                <li sec:authorize="isAuthenticated()" class="nav-item">
+                    <a class="nav-link" th:href="@{/{username}(username=${#httpServletRequest.userPrincipal.name})}">My Profile</a>
+                </li>
+            </span>
+            <span class="icon-bar">
+                <li sec:authorize="isAuthenticated()" class="nav-item">
+                    <a class="btn btn-outline-danger" th:href="@{/logout}">Logout</a>
+                </li>
+            </span>
+        </div>
+    </div>
+</nav>
+
+<br>
+<br>
+
+<h3>Test Centers</h3>
+<div>
+    <section class="container">
+        <label>
+            <input class="light-table-filter" data-table="order-table" placeholder="Filter" type="search">
+        </label>
+        <table class="order-table table">
+            <thead>
+            <tr>
+                <th>Number</th>
+                <th>Name</th>
+                <th>Opening Hours</th>
+                <th>Capacity</th>
+            </tr>
+            </thead>
+            <tbody th:each="testCenterDTO : ${testCenterDTOList}">
+            <tr>
+                <td th:text="${testCenterDTO.id}"></td>
+                <td th:text="${testCenterDTO.name}"></td>
+                <td th:text="${testCenterDTO.openingTime}"></td>
+                <td th:text="${testCenterDTO.capacity}"></td>
+                <td><a th:href="@{/admin/testCenters/{idTestCenter}(idTestCenter=${testCenterDTO.id})}"
+                       class="btn btn-warning" role="button">View</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+
+<br/>
+
+<a style="text-align: center; display: flex; justify-content: center; margin: auto;
+        width: 300px; height: 40px;" th:href="@{/admin/add/testCenterAddress}"
+        class="btn btn-success" aria-pressed="true" role="button">Add Test Center</a>
+
+<script>
+    (function (document) {
+        'use strict';
+
+        var LightTableFilter = (function (Arr) {
+
+            var _input;
+
+            function _onInputEvent(e) {
+                _input = e.target;
+                var tables = document.getElementsByClassName(_input.getAttribute('data-table'));
+                Arr.forEach.call(tables, function (table) {
+                    Arr.forEach.call(table.tBodies, function (tbody) {
+                        Arr.forEach.call(tbody.rows, _filter);
+                    });
+                });
+            }
+
+            function _filter(row) {
+                var text = row.textContent.toLowerCase(), val = _input.value.toLowerCase();
+                row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
+            }
+
+            return {
+                init: function () {
+                    var inputs = document.getElementsByClassName('light-table-filter');
+                    Arr.forEach.call(inputs, function (input) {
+                        input.oninput = _onInputEvent;
+                    });
+                }
+            };
+        })(Array.prototype);
+
+        document.addEventListener('readystatechange', function () {
+            if (document.readyState === 'complete') {
+                LightTableFilter.init();
+            }
+        });
+
+    })(document);
+</script>
+
+</body>
+</html>

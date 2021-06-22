@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Profile</title>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" rel="stylesheet">
+    <style>
+        .card{
+            width: 350px;
+            border: 1px solid gray;
+            box-shadow: 1px 1px 3px #888;
+            border-top: 10px solid green;
+            min-height: 250px;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        h1{
+            font-weight: lighter;
+            margin-left: 100px;
+            margin-top: -70px;
+        }
+
+        p{
+            margin: 10px;
+            font-family: segoe ui,serif;
+            line-height: 1.4em;
+            font-size: 1.2em;
+        }
+
+        #container {
+            display: flex;
+        }
+
+        #item-center {
+            flex-grow: 1;
+        }
+
+        #item-right {
+            margin-right: 2%;
+        }
+
+        #item-left {
+            margin-left: 2%;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" th:href="@{/}">C-app</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <span class="icon-bar">
+                <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item">
+                    <a class="nav-link" th:href="@{/admin/{username}(username=${username})}">Home</a>
+                </li>
+                <li sec:authorize="hasRole('ROLE_SECRETARY')" class="nav-item">
+                    <a class="nav-link" th:href="@{/secretary/{username}(username=${username})}">Home</a>
+                </li>
+                <li sec:authorize="hasRole('ROLE_USER')" class="nav-item">
+                    <a class="nav-link" th:href="@{/user/{username}(username=${username})}">Home</a>
+                </li>
+            </span>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                   aria-expanded="false"> Information </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#">Book your vaccine</a></li>
+                    <li><a class="dropdown-item" href="#">Questions&Answers</a></li>
+                    <li><a class="dropdown-item" href="#">Latest News<</a></li>
+                </ul>
+            </li>
+
+        </ul>
+        <div class="navbar-nav">
+            <span class="icon-bar">
+                <li sec:authorize="!isAuthenticated()" class="nav-item">
+                    <a class="btn btn-outline-primary" th:href="@{/login}">Login</a>
+                </li>
+            </span>
+            <span class="icon-bar">
+                <li sec:authorize="!isAuthenticated()" class="nav-item">
+                    <a class="btn btn-outline-success" th:href="@{/registration/user}">Register</a>
+                </li>
+            </span>
+            <span class="icon-bar">
+                <li sec:authorize="isAuthenticated()" class="nav-item">
+                    <a class="nav-link" th:href="@{/{username}(username=${username})}">My Profile</a>
+                </li>
+            </span>
+            <span class="icon-bar">
+                <li sec:authorize="isAuthenticated()" class="nav-item">
+                    <a class="btn btn-outline-danger" th:href="@{/logout}">Logout</a>
+                </li>
+            </span>
+        </div>
+    </div>
+</nav>
+
+<br>
+
+<div>
+    <p style="background-color: deepskyblue; font-weight: bold; text-align: center" th:text="${username}">
+    Username</p>
+    <p style="background-color: gold; font-weight: bold; text-align: center" th:text="${userDTO.email}">
+    Email</p>
+    <p style="background-color: indianred; font-weight: bold; text-align: center" th:text="${userDTO.phone}">
+    Phone</p>
+</div>
+
+<br>
+
+    <div id="container">
+
+        <div id="item-left" th:if="${personDTO != null}">
+            <div class="card">
+                <table class="table table-hover table-responsive table-sm">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">
+                            Personal Details
+                        <td><a th:href="@{/user/{username}/updatePerson/{personId}(personId=${personDTO.personId},
+                               username=${userDTO.username})}"
+                               class="btn btn-warning" aria-pressed="true" role="button">Update Info</a></td>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">
+                            <p>Id</p>
+                        </th>
+                        <th>
+                            <p th:text="${personDTO.personId}"></p>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <p>Last Name</p>
+                        </th>
+                        <th>
+                            <p th:text="${personDTO.lastName}"></p>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <p>First Name</p>
+                        </th>
+                        <th>
+                            <p th:text="${personDTO.firstName}"></p>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <p>Middle Name</p>
+                        </th>
+                        <th>
+                            <p th:text="${personDTO.middleName}"></p>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <p>Date of Birth</p>
+                        </th>
+                        <th>
+                            <p th:text="${personDTO.dob}"></p>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <p>CPR</p>
+                        </th>
+                        <th>
+                            <p th:text="${personDTO.CPR}"></p>
+                        </th>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    <br>
+
+        <div id="item-center" th:if="${personDTO != null}">
+            <div class="container-sm">
+                <table class="order-table table">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Test Type</th>
+                        <th>Test Center</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Result</th>
+                    </tr>
+                    </thead>
+                    <tbody th:each="appointmentDTO : ${appointmentDTOList}">
+                    <tr>
+                        <td th:text="${appointmentDTO.id}"></td>
+                        <td th:text="${appointmentDTO.testType}"></td>
+                        <td th:text="${appointmentDTO.testCenterName}"></td>
+                        <td th:text="${appointmentDTO.date}"></td>
+                        <td th:text="${appointmentDTO.time}"></td>
+                        <td th:text="null"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    <br>
+
+        <div id="item-right" th:if="${personDTO != null}">
+            <div class="card">
+                <table class="table table-hover table-responsive table-sm">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">
+                            Address Details
+                        <td><a th:href="@{/user/{username}/updateAddress/{personId}(personId=${personDTO.personId},
+                               username=${userDTO.username})}"
+                               class="btn btn-warning" aria-pressed="true" role="button">Update Info</a></td>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">
+                            <p>Street Name</p>
+                        </th>
+                        <th>
+                            <p th:text="${addressDTO.streetName}"></p>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <p>Street No</p>
+                        </th>
+                        <th>
+                            <p th:text="${addressDTO.streetNo}"></p>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <p>Apartment</p>
+                        </th>
+                        <th>
+                            <p th:text="${addressDTO.apartment}"></p>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <p>Locality</p>
+                        </th>
+                        <th>
+                            <p th:text="${addressDTO.locality}"></p>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <p>Zipcode</p>
+                        </th>
+                        <th>
+                            <p th:text="${addressDTO.zipcode}"></p>
+                        </th>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

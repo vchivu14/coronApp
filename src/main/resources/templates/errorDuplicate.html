@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" rel="stylesheet">
+</head>
+<body>
+
+<br>
+<br>
+
+<h3>You already have an appointment for this day.</h3>
+<a th:href="@{/{personId}/appointments/check(personId=${personId})}" class="btn btn-success" aria-pressed="true" role="button">Go Back</a>
+
+</body>
+</html>

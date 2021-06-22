@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Profile</title>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" th:href="@{/}">C-app</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <span class="icon-bar">
+                <li sec:authorize="hasRole('ROLE_USER')" class="nav-item">
+                    <a class="nav-link" th:href="@{/user/{username}(username=${#httpServletRequest.userPrincipal.name})}">Home</a>
+                </li>
+            </span>
+            <span class="icon-bar">
+                <li sec:authorize="isAuthenticated()" class="nav-item">
+                    <a class="nav-link" th:href="@{/user/{username}/appointments/{personId}
+                                            (username=${#httpServletRequest.userPrincipal.name}, personId=${personId})}">My Appointments</a>
+                </li>
+            </span>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                   aria-expanded="false"> Information </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#">Book your vaccine</a></li>
+                    <li><a class="dropdown-item" href="#">Questions&Answers</a></li>
+                    <li><a class="dropdown-item" href="#">Latest News<</a></li>
+                </ul>
+            </li>
+
+        </ul>
+        <div class="navbar-nav">
+            <span class="icon-bar">
+                <li sec:authorize="!isAuthenticated()" class="nav-item">
+                    <a class="btn btn-outline-primary" th:href="@{/login}">Login</a>
+                </li>
+            </span>
+            <span class="icon-bar">
+                <li sec:authorize="!isAuthenticated()" class="nav-item">
+                    <a class="btn btn-outline-success" th:href="@{/registration/user}">Register</a>
+                </li>
+            </span>
+            <span class="icon-bar">
+                <li sec:authorize="isAuthenticated()" class="nav-item">
+                    <a class="nav-link" th:href="@{/{username}(username=${#httpServletRequest.userPrincipal.name})}">My Profile</a>
+                </li>
+            </span>
+            <span class="icon-bar">
+                <li sec:authorize="isAuthenticated()" class="nav-item">
+                    <a class="btn btn-outline-danger" th:href="@{/logout}">Logout</a>
+                </li>
+            </span>
+        </div>
+    </div>
+</nav>
+
+<br>
+<br>
+
+<div class="container">
+    <h3>Appointment Availability</h3>
+    <br>
+    <form id="appointment-form" th:action="@{/{personId}/appointments/check(personId=${personId})}" method="post"
+                                th:object="${appointmentTempDTO}">
+
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="form-group">
+                    <label class="control-label"> Test Center
+                        <select th:field="*{testCenterId}">
+                            <option th:each="testCenter : ${testCenterDTOList}" th:value="${testCenter.id}"
+                                    th:text="${testCenter.name}" th:selected="${null}"></option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="form-group">
+                    <label class="control-label">Test Date
+                        <input th:type="date" id="date" class="form-control" th:field="*{date}"
+                               placeholder="Date" required autofocus="autofocus"/>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <button id="submit-form" type="submit" class="btn btn-success">Check availability</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<br>
+
+<script>
+    let now = new Date(),
+        // minimum date the user can choose, in this case now and in the future
+        minDate = now.toISOString().substring(0, 10);
+    $('#date').prop('min', minDate);
+</script>
+
+</body>
+</html>
